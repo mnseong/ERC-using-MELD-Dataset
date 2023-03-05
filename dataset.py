@@ -11,18 +11,6 @@ def split(session):
     return final_data
 
 
-def collate_fn(sessions):
-    batch_input_token = []
-    for session in sessions:
-        input_token = ""
-        for line in session:
-            speaker, utt, emotion = line
-            input_token += utt
-        batch_input_token.append(input_token)
-
-    return batch_input_token
-
-
 class CustomDataLoader(Dataset):
     def __init__(self, data_path):
         f = open(data_path, 'r')
@@ -70,3 +58,14 @@ class CustomDataLoader(Dataset):
 
     def __getitem__(self, idx):
         return self.session_dataset[idx]
+
+    def collate_fn(self, sessions):
+        batch_input_token = []
+        for session in sessions:
+            input_token = ""
+            for line in session:
+                speaker, utt, emotion = line
+                input_token += utt
+            batch_input_token.append(input_token)
+
+        return batch_input_token
